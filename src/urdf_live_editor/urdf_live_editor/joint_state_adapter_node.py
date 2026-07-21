@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Node that maintains runtime joint values and publishes ``/joint_states``.
+"""
+Node that maintains runtime joint values and publishes ``/joint_states``.
 
 Milestone 0 skeleton: the node starts, logs, and spins. Clamping of bounded
 joints and wrapping of continuous joints is implemented in Milestone 2.

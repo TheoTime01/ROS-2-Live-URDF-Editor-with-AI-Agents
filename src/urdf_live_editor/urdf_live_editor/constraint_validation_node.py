@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Node that parses the model and runs deterministic kinematic validation.
+"""
+Node that parses the model and runs deterministic kinematic validation.
 
 Milestone 0 skeleton: the node starts, logs, and spins. The validation
 engine it drives (``validation/``) is implemented in Milestone 1.

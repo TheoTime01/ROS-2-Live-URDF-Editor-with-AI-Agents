@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Schema/structure validation for URDF models.
+"""
+Schema/structure validation for URDF models.
 
 Checks well-formedness, unique link/joint names, and that every joint
 references existing parent and child links. Implemented in Milestone 1;

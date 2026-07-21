@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Per-joint-type validation rules for URDF models.
+"""
+Per-joint-type validation rules for URDF models.
 
 Encodes the rules for ``revolute``, ``continuous``, ``prismatic``, and
 ``fixed`` joints (required axis, finite limits, effort/velocity sign).

@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Topology validation for URDF models.
+"""
+Topology validation for URDF models.
 
 Verifies the link/joint graph forms a single connected tree with exactly
 one root and no cycles or orphan links. Implemented in Milestone 1.

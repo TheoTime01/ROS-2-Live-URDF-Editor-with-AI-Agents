@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Node that exposes REST/WebSocket endpoints for the edit pipeline.
+"""
+Node that exposes REST/WebSocket endpoints for the edit pipeline.
 
 Milestone 0 skeleton: the node starts, logs, and spins. The HTTP and
 WebSocket surface is implemented in Milestone 3.

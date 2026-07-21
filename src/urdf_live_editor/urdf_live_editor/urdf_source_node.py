@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Node that loads and hot-reloads URDF/Xacro models from disk.
+"""
+Node that loads and hot-reloads URDF/Xacro models from disk.
 
 Milestone 0 skeleton: the node starts, logs, and spins. File watching and
 hot-reload of ``robot_description`` are implemented in Milestone 1.

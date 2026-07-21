@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Node that accepts natural-language edit instructions.
+"""
+Node that accepts natural-language edit instructions.
 
 Milestone 0 skeleton: the node starts, logs, and spins. The Claude Agent SDK
 integration, MCP tools, and subagents are implemented in Milestone 4.

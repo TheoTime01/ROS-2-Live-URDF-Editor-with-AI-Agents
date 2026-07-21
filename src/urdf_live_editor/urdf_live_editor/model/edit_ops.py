@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""``EditOperation`` types and their ``apply`` semantics.
+"""
+``EditOperation`` types and their ``apply`` semantics.
 
 Defines the unit of change (``add_link``, ``add_joint``, ``update_joint``,
 ``remove_joint``, ``set_joint_limit``, ``set_joint_axis``, ``rename``) and

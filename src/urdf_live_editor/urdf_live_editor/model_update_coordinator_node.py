@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Node that stages, validates, applies, and rolls back model versions.
+"""
+Node that stages, validates, applies, and rolls back model versions.
 
 Milestone 0 skeleton: the node starts, logs, and spins. The
 stage -> validate -> apply/reject pipeline is implemented in Milestone 1.

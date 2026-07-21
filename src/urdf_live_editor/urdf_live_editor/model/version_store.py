@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Immutable version store with rollback for applied model changes.
+"""
+Immutable version store with rollback for applied model changes.
 
 Each applied edit produces a new immutable version and an audit entry, and
 any prior version can be restored. Implemented in Milestone 1.

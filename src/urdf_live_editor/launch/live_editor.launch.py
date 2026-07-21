@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Launch the deterministic live-editor stack.
+"""
+Launch the deterministic live-editor stack.
 
 Milestone 0 skeleton: returns an empty launch description. The source node,
 validator, joint-state adapter, coordinator, ``robot_state_publisher``, and

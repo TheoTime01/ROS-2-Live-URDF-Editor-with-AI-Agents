@@ -20,10 +20,10 @@ This document is the working roadmap for **ROS 2 Live URDF Editor with AI Agents
 **Goal:** a buildable, tested, empty skeleton.
 
 - ☑ Repository, README, and `.gitignore`.
-- ☐ Two-package `colcon` workspace: `urdf_live_editor` (deterministic) and `urdf_ai_agents` (Claude Agent SDK).
-- ☐ `package.xml` / `setup.py` for both packages; `colcon build` succeeds.
-- ☐ CI pipeline: `colcon build`, lint (`ament_flake8`, `ament_pep257`), and `pytest` on every push.
-- ☐ Sample robot under `models/sample_arm/` used by demos and tests.
+- ☑ Two-package `colcon` workspace: `urdf_live_editor` (deterministic) and `urdf_ai_agents` (Claude Agent SDK).
+- ☑ `package.xml` / `setup.py` for both packages; `colcon build` succeeds.
+- ☑ CI pipeline: `colcon build`, lint (`ament_flake8`, `ament_pep257`, `ament_copyright`), and `pytest` on every push.
+- ☑ Sample robot under `models/sample_arm/` used by demos and tests.
 
 **Done when:** `colcon build && colcon test` passes green in CI on an empty-but-wired skeleton.
 
@@ -109,10 +109,13 @@ This document is the working roadmap for **ROS 2 Live URDF Editor with AI Agents
 
 The following are the concrete tasks to pick up first, in order:
 
-1. Scaffold the `colcon` workspace with the two packages and make `colcon build` pass (Milestone 0).
-2. Add a minimal `sample_arm.urdf.xacro` and a `pytest` that just parses it (locks in the test harness).
-3. Set up CI (build + lint + test).
-4. Implement `schema.py` and `joint_rules.py` with unit tests — the smallest useful slice of the deterministic core.
+1. ☑ Scaffold the `colcon` workspace with the two packages and make `colcon build` pass (Milestone 0).
+2. ☑ Add a minimal `sample_arm.urdf.xacro` and a `pytest` that just parses it (locks in the test harness).
+3. ☑ Set up CI (build + lint + test).
+4. ☐ Implement `schema.py` and `joint_rules.py` with unit tests — the smallest useful slice of the deterministic core (Milestone 1).
+
+Milestone 0 is complete: `colcon build && colcon test` runs an empty-but-wired
+skeleton green in CI. The next slice is the deterministic core (Milestone 1).
 
 ---
 

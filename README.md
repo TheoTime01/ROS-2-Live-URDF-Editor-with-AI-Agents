@@ -305,9 +305,9 @@ The roadmap is organized into milestones. Status legend: ☐ planned · ◐ in p
 
 ### Milestone 0 — Project scaffolding
 - ☑ Repository, README, and `.gitignore`.
-- ☐ Create the two-package `colcon` workspace (`urdf_live_editor`, `urdf_ai_agents`).
-- ☐ CI: build + lint (`ament_flake8`, `ament_pep257`) + `pytest` on every push.
-- ☐ Add a sample URDF/Xacro robot under `models/` for demos and tests.
+- ☑ Create the two-package `colcon` workspace (`urdf_live_editor`, `urdf_ai_agents`).
+- ☑ CI: build + lint (`ament_flake8`, `ament_pep257`) + `pytest` on every push.
+- ☑ Add a sample URDF/Xacro robot under `models/` for demos and tests.
 
 ### Milestone 1 — Deterministic core (no AI)
 - ☐ `urdf_source_node`: load and hot-reload URDF/Xacro from disk.

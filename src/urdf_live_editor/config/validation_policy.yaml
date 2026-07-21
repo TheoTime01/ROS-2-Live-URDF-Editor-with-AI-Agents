@@ -1,0 +1,23 @@
+# Validation policy for urdf_live_editor.
+#
+# Milestone 0 placeholder. Thresholds for advisory (AI-assisted) checks,
+# default joint limits, and clamp behaviour are read from here starting in
+# later milestones. The deterministic checks are always authoritative and are
+# not configurable away.
+
+deterministic:
+  # Deterministic checks are mandatory and cannot be disabled.
+  enforce_unique_names: true
+  enforce_single_root: true
+  enforce_no_cycles: true
+
+joints:
+  # Default symmetric limits (radians) suggested for repairs of unbounded
+  # revolute/prismatic joints. Advisory only.
+  default_revolute_limit: 1.5707963267948966
+  clamp_bounded_joints: true
+  wrap_continuous_joints: true
+
+advisory:
+  # AI-assisted checks are advisory and never override the deterministic pass.
+  detect_degenerate_axes: true

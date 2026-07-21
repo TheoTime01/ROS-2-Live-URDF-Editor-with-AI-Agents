@@ -16,8 +16,7 @@
 
 import pytest
 
-ament_flake8 = pytest.importorskip('ament_flake8')
-main_with_errors = ament_flake8.main.main_with_errors
+main_with_errors = pytest.importorskip('ament_flake8.main').main_with_errors
 
 
 @pytest.mark.flake8

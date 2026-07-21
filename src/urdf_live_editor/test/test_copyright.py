@@ -16,8 +16,7 @@
 
 import pytest
 
-ament_copyright = pytest.importorskip('ament_copyright')
-main = ament_copyright.main.main
+main = pytest.importorskip('ament_copyright.main').main
 
 
 @pytest.mark.copyright

@@ -16,8 +16,7 @@
 
 import pytest
 
-ament_pep257 = pytest.importorskip('ament_pep257')
-main = ament_pep257.main.main
+main = pytest.importorskip('ament_pep257.main').main
 
 
 @pytest.mark.linter

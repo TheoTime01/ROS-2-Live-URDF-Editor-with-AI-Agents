@@ -77,7 +77,8 @@ class UrdfSource:
             return False
 
     def poll(self):
-        """Reload and notify callbacks when the file changed; return the URDF.
+        """
+        Reload and notify callbacks when the file changed.
 
         Returns the freshly loaded URDF string when a change was detected and
         applied, or ``None`` when nothing changed.

@@ -19,14 +19,64 @@ The repository is a standard ROS 2 (`colcon`) workspace with two packages under
 The hard boundary between the two packages is what guarantees the AI layer can
 never bypass deterministic validation.
 
-## Milestone 0 status
+## Deterministic core (Milestone 1)
 
-This is the scaffolding milestone. Both packages build with `ament_python`,
-expose ROS 2 entry points as skeleton nodes, and ship a lint + test setup that
-runs under `colcon test` (`ament_flake8`, `ament_pep257`, `ament_copyright`,
-and `pytest`). The behaviour of the nodes and of the `validation/` and `model/`
-modules is filled in from Milestone 1 onward.
+The `urdf_live_editor` package now contains a working, AI-free robotics core.
+Everything below is plain Python, imports no ROS at module load, and is covered
+by offline unit and golden-model tests.
+
+### Model
+
+`model/robot_model.py` holds the in-memory representation. A `RobotModel` is a
+set of named `Link` and `Joint` objects; it parses from a plain-URDF string
+(`from_string`) and serializes back (`to_string`), so it round-trips through the
+`robot_description` parameter. Xacro is expanded upstream in `urdf_source_node`,
+so the core only ever sees plain URDF. Link bodies (visual/collision/inertial)
+are preserved verbatim for round-tripping; joints are fully structured.
+
+### Validation engine
+
+`validation/` is a composable set of deterministic checks, each returning a
+`ValidationResult` (an ordered list of severity-tagged `ValidationIssue`s):
+
+- `schema.py` — well-formedness, present/unique link and joint names, and
+  parent/child references that resolve to declared links.
+- `topology.py` — a single connected tree: exactly one root, no cycles,
+  no multi-parent links, no disconnected components.
+- `joint_rules.py` — per-type rules for `revolute`, `continuous`, `prismatic`,
+  and `fixed` joints (axis presence/non-degeneracy, finite ordered limits,
+  positive effort/velocity).
+
+`validation/engine.py` composes the three into `validate_model` and adds
+`validate_urdf_string`, which gates on well-formedness before parsing.
+
+### Staged edits, versioning, and the coordinator
+
+`model/edit_ops.py` defines the `EditOperation` vocabulary (`add_link`,
+`add_joint`, `update_joint`, `remove_joint`, `set_joint_limit`,
+`set_joint_axis`, `rename`, …). Each operation is a small JSON-serializable
+value object that produces a *new* model, never mutating its input, and enforces
+only its own preconditions — structural validity is left to the engine.
+
+`model/version_store.py` keeps an append-only history of immutable `Version`
+snapshots. Rollback appends a copy of an earlier version rather than deleting
+history, so the audit trail (with a per-version diff) is always complete.
+
+`ModelUpdateCoordinator` (in `model_update_coordinator_node.py`) ties it
+together and is the single trusted path by which the model changes: it applies
+an edit to a *copy* of the current model, validates the candidate, and commits a
+new version only when there are no error-severity issues — otherwise the edit is
+rejected and the live model is untouched. This is the interface a human, the web
+API, and later the AI layer all share, which is what guarantees the AI can never
+bypass validation.
+
+### Tests
+
+Unit tests cover each module; `test/test_golden_models.py` runs a corpus of
+known-good and known-broken URDFs under `src/urdf_live_editor/test/models/`
+against the engine and asserts the expected verdict and diagnostic codes. The
+whole suite runs under `colcon test` alongside `ament_flake8`, `ament_pep257`,
+and `ament_copyright`.
 
 The sample robot lives at
-[`models/sample_arm/sample_arm.urdf.xacro`](../models/sample_arm/sample_arm.urdf.xacro)
-and is exercised by a parse test that locks in the test harness.
+[`models/sample_arm/sample_arm.urdf.xacro`](../models/sample_arm/sample_arm.urdf.xacro).

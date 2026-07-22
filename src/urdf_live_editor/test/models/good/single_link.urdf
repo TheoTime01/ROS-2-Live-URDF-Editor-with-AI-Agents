@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<!-- A degenerate but valid robot: one root link and no joints. -->
+<robot name="single_link">
+  <link name="base_link"/>
+</robot>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!-- Broken: link 'tool' is the child of two joints (not a tree). -->
+<robot name="multiple_parents">
+  <link name="base_link"/>
+  <link name="left"/>
+  <link name="right"/>
+  <link name="tool"/>
+  <joint name="j_left" type="fixed">
+    <parent link="base_link"/>
+    <child link="left"/>
+  </joint>
+  <joint name="j_right" type="fixed">
+    <parent link="base_link"/>
+    <child link="right"/>
+  </joint>
+  <joint name="j_tool_left" type="fixed">
+    <parent link="left"/>
+    <child link="tool"/>
+  </joint>
+  <joint name="j_tool_right" type="fixed">
+    <parent link="right"/>
+    <child link="tool"/>
+  </joint>
+</robot>

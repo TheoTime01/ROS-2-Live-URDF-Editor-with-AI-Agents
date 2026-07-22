@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<!-- Broken: the <link> tag is never closed, so this is not well-formed XML. -->
+<robot name="malformed">
+  <link name="base_link"
+</robot>

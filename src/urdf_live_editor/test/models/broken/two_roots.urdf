@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!-- Broken: two links, no joint connecting them; the tree has two roots. -->
+<robot name="two_roots">
+  <link name="base_link"/>
+  <link name="floating_link"/>
+</robot>

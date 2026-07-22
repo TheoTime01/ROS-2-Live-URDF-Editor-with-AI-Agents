@@ -64,11 +64,11 @@ This document is the working roadmap for **ROS 2 Live URDF Editor with AI Agents
 
 **Goal:** the pipeline is reachable over HTTP/WebSocket.
 
-- ☐ `web_api_node` — REST for read / stage / validate / apply / rollback.
-- ☐ WebSocket stream for live validation diagnostics and model events.
-- ☐ API contract tests.
+- ☑ `web_api_node` — REST for read / stage / validate / apply / rollback.
+- ☑ WebSocket stream for live validation diagnostics and model events.
+- ☑ API contract tests.
 
-**Done when:** the same edit flow available on the ROS side is fully drivable through the API and covered by contract tests.
+**Done when:** the same edit flow available on the ROS side is fully drivable through the API and covered by contract tests. ✅ Met: the transport-agnostic `WebApiService` (`web/service.py`) routes `GET /health`, `GET /model`, `GET /versions[/{i}]`, and `POST /stage`, `/validate`, `/apply`, `/rollback` onto the same `ModelUpdateCoordinator`, so the API can never bypass validation — a failing edit comes back `422` with diagnostics and the live model is untouched, exactly as on the ROS side. Every mutating request also publishes a JSON event (`staged`/`validated`/`applied`/`rejected`/`rolled_back`) on an `EventHub` (`web/events.py`), which `web/server.py` streams to WebSocket clients over a stdlib-only RFC 6455 transport after an initial `snapshot`. `web_api_node` seeds the service from a `model_path` or the first valid `robot_description` and republishes the latched `robot_description` on every applied/rolled-back edit, so an HTTP edit flows straight to `robot_state_publisher` and RViz2; `web_api.launch.py` brings up that stack. The contract is locked offline by `test/test_web_api_service.py` (every endpoint + status code) and `test/test_web_api_events.py`, over a real socket by `test/test_web_api_server.py` (REST via `http.client`, events via a hand-rolled WebSocket client), and end to end on the ROS graph by the `launch_testing` test `test/test_web_api_launch.py`.
 
 ---
 
@@ -114,7 +114,8 @@ The following are the concrete tasks to pick up first, in order:
 3. ☑ Set up CI (build + lint + test).
 4. ☑ Implement `schema.py` and `joint_rules.py` with unit tests — the smallest useful slice of the deterministic core (Milestone 1).
 5. ☑ Wire the deterministic stack into RViz2 with a live joint-state adapter (Milestone 2).
-6. ☐ Expose the pipeline over HTTP/WebSocket via `web_api_node` (Milestone 3).
+6. ☑ Expose the pipeline over HTTP/WebSocket via `web_api_node` (Milestone 3).
+7. ☐ Build the Claude Agent SDK layer (MCP tools, hooks, agents) on top of the API (Milestone 4).
 
 Milestone 1 is complete: the deterministic core — model, validation engine,
 edit operations, version store, and the stage → validate → apply/reject
@@ -126,8 +127,20 @@ wraps continuous joints into `/joint_states`; `live_editor.launch.py` brings up
 the full deterministic stack (`urdf_source_node` → `robot_state_publisher` +
 adapter, with optional RViz2); and a `launch_testing` integration test asserts
 the sample arm's TF appears and that a joint command moves it. Editing the
-sample robot now updates the RViz2 model live. The next slice is the web API
-(Milestone 3).
+sample robot now updates the RViz2 model live.
+
+Milestone 3 is complete: the deterministic pipeline is now reachable over
+HTTP/WebSocket. A transport-agnostic `WebApiService` routes REST requests
+(read / stage / validate / apply / rollback) onto the same
+`ModelUpdateCoordinator`, an `EventHub` broadcasts every stage/validate/apply/
+rollback as a JSON event, and a stdlib-only server streams those events to
+WebSocket clients. `web_api_node` republishes the latched `robot_description`
+on every applied edit, so an HTTP edit updates RViz2 live, and
+`web_api.launch.py` brings up that stack. The flow is covered by offline
+contract tests, real-socket wire tests, and a `launch_testing` integration
+test — all runnable with zero external dependencies. The next slice is the
+Claude Agent SDK layer (Milestone 4), which builds MCP tools and agents on top
+of this trusted API.
 
 ---
 

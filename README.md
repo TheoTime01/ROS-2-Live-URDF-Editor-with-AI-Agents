@@ -182,6 +182,47 @@ ros2 run urdf_ai_agents ai_agent_node
 
 > Commands above reflect the planned package layout. Track implementation progress in the [Roadmap](#roadmap).
 
+## Web API
+
+`web_api_node` exposes the same staged-validation pipeline over HTTP and WebSocket, so any client — a script, a browser, or the AI layer — drives the exact edit flow available on the ROS side. It never bypasses validation: a rejected edit leaves the live model untouched, just as on the ROS graph. Every applied or rolled-back edit is republished on the latched `robot_description` topic, so an edit made over HTTP updates RViz2 live.
+
+```bash
+# Bring up the API (+ robot_state_publisher; add use_rviz:=true to visualize):
+ros2 launch urdf_live_editor web_api.launch.py port:=8080
+
+# Read the current model, its version, and validation verdict:
+curl http://127.0.0.1:8080/model
+
+# Validate a candidate edit without committing it:
+curl -X POST http://127.0.0.1:8080/stage -H 'Content-Type: application/json' \
+  -d '{"operations": [{"op": "add_link", "name": "probe"},
+       {"op": "add_joint", "name": "probe_joint", "joint_type": "fixed",
+        "parent": "tool_link", "child": "probe"}]}'
+
+# Apply it (200 on success with the new version + diff; 422 if it fails validation):
+curl -X POST http://127.0.0.1:8080/apply -H 'Content-Type: application/json' \
+  -d '{"operations": [{"op": "add_link", "name": "probe"},
+       {"op": "add_joint", "name": "probe_joint", "joint_type": "fixed",
+        "parent": "tool_link", "child": "probe"}]}'
+
+# Roll back to an earlier version:
+curl -X POST http://127.0.0.1:8080/rollback -H 'Content-Type: application/json' \
+  -d '{"target_index": 0}'
+```
+
+| Method & path        | Purpose                                                        |
+| -------------------- | ------------------------------------------------------------- |
+| `GET /health`        | Liveness plus a small model summary.                          |
+| `GET /model`         | Current model: version, URDF, and validation verdict.         |
+| `GET /versions`      | Full audit log — one entry per version, each with its diff.   |
+| `GET /versions/{i}`  | A single version snapshot by index.                           |
+| `POST /stage`        | Validate a candidate edit; never commits.                     |
+| `POST /validate`     | Validate the current model, a candidate edit, or a raw URDF.  |
+| `POST /apply`        | Stage, validate, and commit an edit (`422` if it fails).      |
+| `POST /rollback`     | Append a copy of an earlier version as the new current.       |
+
+Connect a WebSocket to `ws://127.0.0.1:8080/events` to receive a `snapshot` of the current model followed by a live stream of `staged`, `validated`, `applied`, `rejected`, and `rolled_back` events — the validation diagnostics and model changes as they happen.
+
 ## Claude Agent SDK integration
 
 The AI layer is a thin, auditable wrapper around the Claude Agent SDK. Agents never write the active `robot_description` directly — they only produce `EditOperation` JSON and call project tools that route through the same staged-validation pipeline a human uses.
@@ -335,9 +376,9 @@ The roadmap is organized into milestones. Status legend: ☐ planned · ◐ in p
 - ☑ `launch_testing` integration tests asserting on TF output.
 
 ### Milestone 3 — Web API
-- ☐ `web_api_node`: REST endpoints for read/stage/validate/apply/rollback.
-- ☐ WebSocket stream for live validation diagnostics and model events.
-- ☐ API contract tests.
+- ☑ `web_api_node`: REST endpoints for read/stage/validate/apply/rollback.
+- ☑ WebSocket stream for live validation diagnostics and model events.
+- ☑ API contract tests.
 
 ### Milestone 4 — Claude Agent SDK layer
 - ☐ MCP tools exposing `read_urdf`, `stage_edit`, `validate_model`, `apply_model`, `rollback`, `describe_joint`.

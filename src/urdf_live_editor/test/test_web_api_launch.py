@@ -137,10 +137,15 @@ class TestWebApiIntegration(unittest.TestCase):
 
     def test_rest_serves_the_seeded_model(self):
         """GET /model returns the sample arm seeded from disk."""
+        # The two tests share one node/process and unittest runs them
+        # alphabetically, so an edit may already have been applied. Assert on
+        # the seeded content, which survives later additive edits, rather than
+        # on a specific version index.
         status, body = _http_with_retry('GET', '/model')
         self.assertEqual(status, 200)
-        self.assertEqual(body['version']['index'], 0)
         self.assertIn('base_link', body['urdf'])
+        self.assertIn('shoulder', body['urdf'])
+        self.assertTrue(body['validation']['is_valid'])
 
     def test_api_edit_is_republished_on_the_ros_topic(self):
         """An edit applied over HTTP shows up on robot_description."""

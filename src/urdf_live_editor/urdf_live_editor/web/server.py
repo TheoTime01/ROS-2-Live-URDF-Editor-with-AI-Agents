@@ -144,7 +144,8 @@ def make_handler(service, event_path, poll_interval, stop_event):
             return self.rfile.read(length) if length else b''
 
         def _serve_rest(self, method):
-            """Dispatch a REST request and write the JSON response.
+            """
+            Dispatch a REST request and write the JSON response.
 
             ``service.handle`` is total: it maps every request -- valid or not
             -- to an :class:`ApiResponse`, so no error handling is needed here.

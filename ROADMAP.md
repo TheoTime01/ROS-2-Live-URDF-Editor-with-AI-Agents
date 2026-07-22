@@ -33,17 +33,17 @@ This document is the working roadmap for **ROS 2 Live URDF Editor with AI Agents
 
 **Goal:** the constraint engine and staged-edit pipeline exist and are trusted.
 
-- ☐ `urdf_source_node` — load + hot-reload URDF/Xacro from disk (file watcher).
-- ☐ Validation engine (`validation/`):
-  - ☐ `schema.py` — well-formedness, unique names, parent/child references.
-  - ☐ `topology.py` — single connected tree, one root, no cycles/orphans.
-  - ☐ `joint_rules.py` — per-type rules for `revolute`/`continuous`/`prismatic`/`fixed`.
-- ☐ `model/edit_ops.py` — `EditOperation` types + `apply()` for each operation.
-- ☐ `model/version_store.py` — immutable versions + rollback.
-- ☐ `model_update_coordinator_node` — stage → validate → apply/reject.
-- ☐ Unit tests + golden-model tests (known-good / known-broken URDFs → expected `ValidationResult`).
+- ☑ `urdf_source_node` — load + hot-reload URDF/Xacro from disk (file watcher).
+- ☑ Validation engine (`validation/`):
+  - ☑ `schema.py` — well-formedness, unique names, parent/child references.
+  - ☑ `topology.py` — single connected tree, one root, no cycles/orphans.
+  - ☑ `joint_rules.py` — per-type rules for `revolute`/`continuous`/`prismatic`/`fixed`.
+- ☑ `model/edit_ops.py` — `EditOperation` types + `apply()` for each operation.
+- ☑ `model/version_store.py` — immutable versions + rollback.
+- ☑ `model_update_coordinator_node` — stage → validate → apply/reject.
+- ☑ Unit tests + golden-model tests (known-good / known-broken URDFs → expected `ValidationResult`).
 
-**Done when:** a scripted sequence of edits stages, validates, applies, and rolls back correctly, all under unit + golden tests, with zero AI involvement.
+**Done when:** a scripted sequence of edits stages, validates, applies, and rolls back correctly, all under unit + golden tests, with zero AI involvement. ✅ Met: `RobotModel` parses/serializes plain URDF; the `schema`/`topology`/`joint_rules` checks compose in `validation/engine.py` into a single `ValidationResult`; `model/edit_ops.py` and `model/version_store.py` back a `ModelUpdateCoordinator` that stages, validates, applies, and rolls back; and the golden good/broken URDFs under `src/urdf_live_editor/test/models/` lock the verdicts.
 
 ---
 
@@ -112,11 +112,15 @@ The following are the concrete tasks to pick up first, in order:
 1. ☑ Scaffold the `colcon` workspace with the two packages and make `colcon build` pass (Milestone 0).
 2. ☑ Add a minimal `sample_arm.urdf.xacro` and a `pytest` that just parses it (locks in the test harness).
 3. ☑ Set up CI (build + lint + test).
-4. ☐ Implement `schema.py` and `joint_rules.py` with unit tests — the smallest useful slice of the deterministic core (Milestone 1).
+4. ☑ Implement `schema.py` and `joint_rules.py` with unit tests — the smallest useful slice of the deterministic core (Milestone 1).
+5. ☐ Wire the deterministic stack into RViz2 with a live joint-state adapter (Milestone 2).
 
-Milestone 0 is complete: `colcon build && colcon test` runs an empty-but-wired
-skeleton green in CI. The next slice is the deterministic core (Milestone 1).
+Milestone 1 is complete: the deterministic core — model, validation engine,
+edit operations, version store, and the stage → validate → apply/reject
+coordinator — is implemented and covered by unit and golden-model tests, all
+runnable offline with zero AI involvement. The next slice is live
+visualization (Milestone 2).
 
 ---
 
-_Last updated: 2026-07-21._
+_Last updated: 2026-07-22._

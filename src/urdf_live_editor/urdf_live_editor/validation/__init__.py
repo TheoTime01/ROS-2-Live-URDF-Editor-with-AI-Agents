@@ -13,3 +13,21 @@
 # limitations under the License.
 
 """Deterministic constraint-validation engine for URDF models."""
+
+from urdf_live_editor.validation.engine import (
+    validate_model,
+    validate_urdf_string,
+)
+from urdf_live_editor.validation.result import (
+    Severity,
+    ValidationIssue,
+    ValidationResult,
+)
+
+__all__ = [
+    'Severity',
+    'ValidationIssue',
+    'ValidationResult',
+    'validate_model',
+    'validate_urdf_string',
+]

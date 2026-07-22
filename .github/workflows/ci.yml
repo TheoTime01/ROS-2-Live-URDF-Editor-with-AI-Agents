@@ -17,7 +17,7 @@ jobs:
       image: rostooling/setup-ros-docker:ubuntu-jammy-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build and test workspace
         id: action_ros_ci
@@ -31,7 +31,7 @@ jobs:
           import-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload colcon logs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: colcon-logs

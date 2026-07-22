@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- Broken: a revolute joint must declare finite lower/upper limits. -->
+<robot name="revolute_no_limit">
+  <link name="base_link"/>
+  <link name="arm"/>
+  <joint name="shoulder" type="revolute">
+    <parent link="base_link"/>
+    <child link="arm"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+</robot>

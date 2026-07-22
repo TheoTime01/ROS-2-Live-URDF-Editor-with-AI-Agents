@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- Broken: joints form a cycle a -> b -> a, so there is no root. -->
+<robot name="cycle">
+  <link name="a"/>
+  <link name="b"/>
+  <joint name="j1" type="fixed">
+    <parent link="a"/>
+    <child link="b"/>
+  </joint>
+  <joint name="j2" type="fixed">
+    <parent link="b"/>
+    <child link="a"/>
+  </joint>
+</robot>

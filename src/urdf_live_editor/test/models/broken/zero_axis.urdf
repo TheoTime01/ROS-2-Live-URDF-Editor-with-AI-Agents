@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- Broken: a movable joint's axis is the zero vector (degenerate). -->
+<robot name="zero_axis">
+  <link name="base_link"/>
+  <link name="spinner"/>
+  <joint name="wrist" type="continuous">
+    <parent link="base_link"/>
+    <child link="spinner"/>
+    <axis xyz="0 0 0"/>
+    <limit effort="5.0" velocity="1.0"/>
+  </joint>
+</robot>

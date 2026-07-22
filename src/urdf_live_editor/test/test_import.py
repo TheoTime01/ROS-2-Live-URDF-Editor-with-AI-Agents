@@ -27,10 +27,16 @@ def test_package_has_version():
 def test_submodules_import():
     """Validation and model submodules import without side effects."""
     for name in (
+        'urdf_live_editor.validation',
+        'urdf_live_editor.validation.engine',
+        'urdf_live_editor.validation.result',
         'urdf_live_editor.validation.schema',
         'urdf_live_editor.validation.topology',
         'urdf_live_editor.validation.joint_rules',
+        'urdf_live_editor.model.robot_model',
         'urdf_live_editor.model.edit_ops',
         'urdf_live_editor.model.version_store',
+        'urdf_live_editor.model_update_coordinator_node',
+        'urdf_live_editor.urdf_source_node',
     ):
         assert importlib.import_module(name) is not None

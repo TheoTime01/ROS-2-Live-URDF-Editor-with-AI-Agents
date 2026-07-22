@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!-- Plain-URDF twin of models/sample_arm: base + three links, two revolute
+     joints and one continuous wrist. Used as a known-good golden model. -->
+<robot name="three_link_arm">
+  <link name="base_link"/>
+  <link name="link_1"/>
+  <link name="link_2"/>
+  <link name="tool_link"/>
+
+  <joint name="shoulder" type="revolute">
+    <parent link="base_link"/>
+    <child link="link_1"/>
+    <origin xyz="0 0 0.04" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.57" upper="1.57" effort="10.0" velocity="1.0"/>
+  </joint>
+
+  <joint name="elbow" type="revolute">
+    <parent link="link_1"/>
+    <child link="link_2"/>
+    <origin xyz="0 0 0.30" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.57" upper="1.57" effort="10.0" velocity="1.0"/>
+  </joint>
+
+  <joint name="wrist" type="continuous">
+    <parent link="link_2"/>
+    <child link="tool_link"/>
+    <origin xyz="0 0 0.30" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="5.0" velocity="2.0"/>
+  </joint>
+</robot>

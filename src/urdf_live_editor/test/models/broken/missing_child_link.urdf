@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- Broken: joint 'j1' references a child link that is never declared. -->
+<robot name="missing_child_link">
+  <link name="base_link"/>
+  <joint name="j1" type="fixed">
+    <parent link="base_link"/>
+    <child link="ghost_link"/>
+  </joint>
+</robot>

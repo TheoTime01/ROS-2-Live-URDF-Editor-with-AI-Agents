@@ -33,6 +33,13 @@ setup(
             glob('launch/*.launch.py')),
         (os.path.join('share', package_name, 'config'),
             glob('config/*.yaml')),
+        (os.path.join('share', package_name, 'rviz'),
+            glob('rviz/*.rviz')),
+        # The canonical sample robot lives at the repository root; install a
+        # copy into the package share so launch files and launch tests can find
+        # it via get_package_share_directory (works from an installed tree).
+        (os.path.join('share', package_name, 'models', 'sample_arm'),
+            glob('../../models/sample_arm/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

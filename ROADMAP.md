@@ -76,14 +76,14 @@ This document is the working roadmap for **ROS 2 Live URDF Editor with AI Agents
 
 **Goal:** natural-language editing, repair, and explanation on top of the trusted core.
 
-- ☐ MCP tools: `read_urdf`, `stage_edit`, `validate_model`, `apply_model`, `rollback`, `describe_joint`.
-- ☐ Hooks: pre-tool (mutations must target a staged candidate), post-tool (audit log with diff).
-- ☐ **URDF Editor Agent** — natural language → `EditOperation` JSON.
-- ☐ **Constraint Validator Agent** + **Kinematic Reasoning Agent** — human-readable explanations of failures and degeneracies.
-- ☐ **Repair Agent** — fix malformed URDF, propose `suggested_repairs`.
-- ☐ Recorded-response tests so the AI layer runs deterministically in CI; opt-in live-SDK suite.
+- ☑ MCP tools: `read_urdf`, `stage_edit`, `validate_model`, `apply_model`, `rollback`, `describe_joint`.
+- ☑ Hooks: pre-tool (mutations must target a staged candidate), post-tool (audit log with diff).
+- ☑ **URDF Editor Agent** — natural language → `EditOperation` JSON.
+- ☑ **Constraint Validator Agent** + **Kinematic Reasoning Agent** — human-readable explanations of failures and degeneracies.
+- ☑ **Repair Agent** — fix malformed URDF, propose `suggested_repairs`.
+- ☑ Recorded-response tests so the AI layer runs deterministically in CI; opt-in live-SDK suite.
 
-**Done when:** a user instruction like "add a ±90° elbow between link_2 and link_3" produces a validated, applied edit, and a broken URDF can be diagnosed and repaired — all reproducible in CI without live API calls.
+**Done when:** a user instruction like "add a ±90° elbow between link_2 and link_3" produces a validated, applied edit, and a broken URDF can be diagnosed and repaired — all reproducible in CI without live API calls. ✅ Met: the six tools are backed by `tools/toolbox.py`'s `UrdfToolbox`, which routes every call through the same `WebApiService` the HTTP layer uses, so the AI layer travels the identical stage → validate → apply/reject path and can never bypass validation. `hooks.py` supplies the pre-tool `MutationGuard` (an `apply_model` is refused unless its exact operations were the last thing staged *and* that candidate validated) and the post-tool `AuditTrail` (every call logged, each applied edit captured with its version diff); `dispatch.py`'s `ToolDispatcher` runs both around every call, and `sdk_adapter.py` wires the same guard/audit/toolbox into a live Claude Agent SDK MCP server, `HookMatcher`s, and the four `AgentDefinition` subagents — imported lazily so the package and its whole test suite run with no SDK and no API key. The four agents are declared in `agents/definitions.py` with least-privilege tool scoping (only the Editor and Repair agents get the mutating `apply_model`) and prompts in `prompts/system_prompts.py`; the Validator, Reasoner, and Repair agents are grounded in the deterministic `explanations.py` knowledge base (per-code explanations, kinematic-degeneracy notes, and mechanical `suggest_repairs`). The AI layer runs deterministically in CI via `session.py`'s `AgentSession` + `RecordedPlanner`: the tool arguments (the JSON an LLM would emit) come from fixtures under `test/fixtures/`, but every stage/validate/apply/guard/audit step is the real core. `test/test_agent_session.py` is the acceptance proof — it turns "add a ±90° elbow between link_2 and link_3" into a validated, applied edit, and diagnoses and repairs a broken URDF to a valid model — alongside offline tests for the toolbox, hooks, dispatcher, explanations, agent definitions, and the SDK adapter's SDK-free surface. The opt-in live suite (`test/test_live_sdk.py`) runs only when `URDF_AI_LIVE=1` and the SDK are present.
 
 ---
 
@@ -115,7 +115,8 @@ The following are the concrete tasks to pick up first, in order:
 4. ☑ Implement `schema.py` and `joint_rules.py` with unit tests — the smallest useful slice of the deterministic core (Milestone 1).
 5. ☑ Wire the deterministic stack into RViz2 with a live joint-state adapter (Milestone 2).
 6. ☑ Expose the pipeline over HTTP/WebSocket via `web_api_node` (Milestone 3).
-7. ☐ Build the Claude Agent SDK layer (MCP tools, hooks, agents) on top of the API (Milestone 4).
+7. ☑ Build the Claude Agent SDK layer (MCP tools, hooks, agents) on top of the API (Milestone 4).
+8. ☐ UX & robustness: optional web front-end, Launch/Integration Agent, and an audit-trail viewer (Milestone 5).
 
 Milestone 1 is complete: the deterministic core — model, validation engine,
 edit operations, version store, and the stage → validate → apply/reject
@@ -138,9 +139,22 @@ WebSocket clients. `web_api_node` republishes the latched `robot_description`
 on every applied edit, so an HTTP edit updates RViz2 live, and
 `web_api.launch.py` brings up that stack. The flow is covered by offline
 contract tests, real-socket wire tests, and a `launch_testing` integration
-test — all runnable with zero external dependencies. The next slice is the
-Claude Agent SDK layer (Milestone 4), which builds MCP tools and agents on top
-of this trusted API.
+test — all runnable with zero external dependencies.
+
+Milestone 4 is complete: the Claude Agent SDK layer sits on top of the trusted
+core. Six MCP tools (`read_urdf`, `stage_edit`, `validate_model`, `apply_model`,
+`rollback`, `describe_joint`) route every call through the same validated
+pipeline the HTTP layer uses; a pre-tool mutation guard refuses any commit that
+was not staged and validated first, and a post-tool audit trail records every
+call and applied diff. Four subagents — URDF Editor, Constraint Validator,
+Kinematic Reasoning, and Repair — are declared with least-privilege tool scoping
+and grounded in a deterministic explanation/repair knowledge base. The whole AI
+runtime is exercised in CI without any API call through a recorded-response
+planner: the acceptance test turns "add a ±90° elbow between link_2 and link_3"
+into a validated, applied edit and diagnoses and repairs a broken URDF, while an
+opt-in live suite drives the real SDK. The next slice is UX & robustness
+(Milestone 5): an optional web front-end, a Launch/Integration Agent, and an
+audit-trail viewer.
 
 ---
 

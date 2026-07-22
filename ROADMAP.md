@@ -51,12 +51,12 @@ This document is the working roadmap for **ROS 2 Live URDF Editor with AI Agents
 
 **Goal:** edits are visible in RViz2 in real time.
 
-- ☐ `joint_state_adapter_node` — clamp bounded joints, wrap continuous joints, publish `/joint_states`.
-- ☐ Republish `robot_description`; wire `robot_state_publisher` + RViz2.
-- ☐ `launch/live_editor.launch.py` brings up the full deterministic stack.
-- ☐ `launch_testing` integration tests asserting on published TF.
+- ☑ `joint_state_adapter_node` — clamp bounded joints, wrap continuous joints, publish `/joint_states`.
+- ☑ Republish `robot_description`; wire `robot_state_publisher` + RViz2.
+- ☑ `launch/live_editor.launch.py` brings up the full deterministic stack.
+- ☑ `launch_testing` integration tests asserting on published TF.
 
-**Done when:** editing the sample robot's joints updates the RViz2 model live, verified by an automated launch test.
+**Done when:** editing the sample robot's joints updates the RViz2 model live, verified by an automated launch test. ✅ Met: `JointStateAdapter` (the offline-testable core of `joint_state_adapter_node`) clamps `revolute`/`prismatic` commands to their limits and wraps `continuous` joints into `(-pi, pi]`, carrying positions across live model edits; `live_editor.launch.py` wires `urdf_source_node` → `robot_state_publisher` (+ optional RViz2 with a packaged config) alongside the adapter; and `test/test_live_editor_launch.py` (a `launch_testing` test) brings the stack up headless, asserts the sample arm's moving links appear on `/tf`, and drives `/joint_commands` to confirm a shoulder command rotates `link_1`. Adapter clamp/wrap logic is additionally locked by offline unit tests in `test/test_joint_state_adapter.py`.
 
 ---
 
@@ -113,13 +113,21 @@ The following are the concrete tasks to pick up first, in order:
 2. ☑ Add a minimal `sample_arm.urdf.xacro` and a `pytest` that just parses it (locks in the test harness).
 3. ☑ Set up CI (build + lint + test).
 4. ☑ Implement `schema.py` and `joint_rules.py` with unit tests — the smallest useful slice of the deterministic core (Milestone 1).
-5. ☐ Wire the deterministic stack into RViz2 with a live joint-state adapter (Milestone 2).
+5. ☑ Wire the deterministic stack into RViz2 with a live joint-state adapter (Milestone 2).
+6. ☐ Expose the pipeline over HTTP/WebSocket via `web_api_node` (Milestone 3).
 
 Milestone 1 is complete: the deterministic core — model, validation engine,
 edit operations, version store, and the stage → validate → apply/reject
 coordinator — is implemented and covered by unit and golden-model tests, all
-runnable offline with zero AI involvement. The next slice is live
-visualization (Milestone 2).
+runnable offline with zero AI involvement.
+
+Milestone 2 is complete: `joint_state_adapter_node` clamps bounded joints and
+wraps continuous joints into `/joint_states`; `live_editor.launch.py` brings up
+the full deterministic stack (`urdf_source_node` → `robot_state_publisher` +
+adapter, with optional RViz2); and a `launch_testing` integration test asserts
+the sample arm's TF appears and that a joint command moves it. Editing the
+sample robot now updates the RViz2 model live. The next slice is the web API
+(Milestone 3).
 
 ---
 

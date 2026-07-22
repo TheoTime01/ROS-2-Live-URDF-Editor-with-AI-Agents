@@ -94,6 +94,8 @@ ROS-2-Live-URDF-Editor-with-AI-Agents/
 │   │   │   └── live_editor.launch.py
 │   │   ├── config/
 │   │   │   └── validation_policy.yaml
+│   │   ├── rviz/
+│   │   │   └── live_editor.rviz         # RobotModel + TF display preset
 │   │   └── test/
 │   │       ├── test_joint_rules.py
 │   │       ├── test_edit_ops.py
@@ -161,8 +163,17 @@ source install/setup.bash
 ### Run the live editor
 
 ```bash
-# Launch the deterministic robotics stack (source node, validator, adapters, RViz2)
-ros2 launch urdf_live_editor live_editor.launch.py model:=models/sample_arm/sample_arm.urdf.xacro
+# Launch the deterministic stack (urdf_source_node, joint_state_adapter_node,
+# robot_state_publisher) with RViz2. The bundled sample arm loads by default.
+ros2 launch urdf_live_editor live_editor.launch.py use_rviz:=true
+
+# Point it at a different model, or tune the joint-state publish rate:
+ros2 launch urdf_live_editor live_editor.launch.py \
+  model_path:=/path/to/robot.urdf.xacro use_rviz:=true publish_rate_hz:=50.0
+
+# Drive a joint live (the adapter clamps/wraps the command before publishing):
+ros2 topic pub --once /joint_commands sensor_msgs/msg/JointState \
+  '{name: ["shoulder"], position: [1.2]}'
 
 # In a second terminal, start the AI agent node
 export ANTHROPIC_API_KEY=sk-ant-...
@@ -310,18 +321,18 @@ The roadmap is organized into milestones. Status legend: ☐ planned · ◐ in p
 - ☑ Add a sample URDF/Xacro robot under `models/` for demos and tests.
 
 ### Milestone 1 — Deterministic core (no AI)
-- ☐ `urdf_source_node`: load and hot-reload URDF/Xacro from disk.
-- ☐ Validation engine: XML/Xacro well-formedness, schema, topology, per-joint rules.
-- ☐ `EditOperation` model + `apply` semantics for all supported operations.
-- ☐ Version store with rollback.
-- ☐ `model_update_coordinator_node`: stage → validate → apply/reject pipeline.
-- ☐ Unit tests + golden-model tests for the above.
+- ☑ `urdf_source_node`: load and hot-reload URDF/Xacro from disk.
+- ☑ Validation engine: XML/Xacro well-formedness, schema, topology, per-joint rules.
+- ☑ `EditOperation` model + `apply` semantics for all supported operations.
+- ☑ Version store with rollback.
+- ☑ `model_update_coordinator_node`: stage → validate → apply/reject pipeline.
+- ☑ Unit tests + golden-model tests for the above.
 
 ### Milestone 2 — Live visualization
-- ☐ `joint_state_adapter_node`: clamp bounded joints, wrap continuous joints.
-- ☐ Republish `robot_description`; integrate `robot_state_publisher` and RViz2.
-- ☐ `live_editor.launch.py` bringing up the full deterministic stack.
-- ☐ `launch_testing` integration tests asserting on TF output.
+- ☑ `joint_state_adapter_node`: clamp bounded joints, wrap continuous joints.
+- ☑ Republish `robot_description`; integrate `robot_state_publisher` and RViz2.
+- ☑ `live_editor.launch.py` bringing up the full deterministic stack.
+- ☑ `launch_testing` integration tests asserting on TF output.
 
 ### Milestone 3 — Web API
 - ☐ `web_api_node`: REST endpoints for read/stage/validate/apply/rollback.

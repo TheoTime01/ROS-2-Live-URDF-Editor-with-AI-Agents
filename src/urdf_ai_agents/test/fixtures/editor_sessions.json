@@ -1,0 +1,49 @@
+{
+  "add a ±90° elbow between link_2 and link_3": {
+    "tool_calls": [
+      {"tool": "read_urdf", "args": {}},
+      {
+        "tool": "stage_edit",
+        "args": {
+          "operations": [
+            {"op": "add_link", "name": "link_3"},
+            {
+              "op": "add_joint",
+              "name": "elbow",
+              "joint_type": "revolute",
+              "parent": "link_2",
+              "child": "link_3",
+              "axis": [0, 1, 0],
+              "lower": -1.5708,
+              "upper": 1.5708,
+              "effort": 10,
+              "velocity": 1
+            }
+          ]
+        }
+      },
+      {
+        "tool": "apply_model",
+        "args": {
+          "operations": [
+            {"op": "add_link", "name": "link_3"},
+            {
+              "op": "add_joint",
+              "name": "elbow",
+              "joint_type": "revolute",
+              "parent": "link_2",
+              "child": "link_3",
+              "axis": [0, 1, 0],
+              "lower": -1.5708,
+              "upper": 1.5708,
+              "effort": 10,
+              "velocity": 1
+            }
+          ],
+          "label": "add elbow"
+        }
+      }
+    ],
+    "final_message": "Added a revolute 'elbow' joint between link_2 and a new link_3, rotating about Y with a ±90° (±1.5708 rad) limit."
+  }
+}

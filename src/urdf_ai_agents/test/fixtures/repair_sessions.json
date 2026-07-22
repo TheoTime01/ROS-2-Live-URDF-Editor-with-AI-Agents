@@ -1,0 +1,43 @@
+{
+  "fix the broken shoulder joint": {
+    "tool_calls": [
+      {"tool": "read_urdf", "args": {}},
+      {"tool": "validate_model", "args": {}},
+      {"tool": "describe_joint", "args": {"name": "j1"}},
+      {
+        "tool": "stage_edit",
+        "args": {
+          "operations": [
+            {"op": "set_joint_axis", "name": "j1", "axis": [0.0, 0.0, 1.0]},
+            {
+              "op": "set_joint_limit",
+              "name": "j1",
+              "effort": 10.0,
+              "velocity": 1.0,
+              "lower": -1.0,
+              "upper": 1.0
+            }
+          ]
+        }
+      },
+      {
+        "tool": "apply_model",
+        "args": {
+          "operations": [
+            {"op": "set_joint_axis", "name": "j1", "axis": [0.0, 0.0, 1.0]},
+            {
+              "op": "set_joint_limit",
+              "name": "j1",
+              "effort": 10.0,
+              "velocity": 1.0,
+              "lower": -1.0,
+              "upper": 1.0
+            }
+          ],
+          "label": "repair j1"
+        }
+      }
+    ],
+    "final_message": "Repaired joint 'j1': set a Z axis, ordered its limits to [-1, 1], and gave it positive effort (10) and velocity (1)."
+  }
+}

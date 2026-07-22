@@ -381,12 +381,12 @@ The roadmap is organized into milestones. Status legend: ☐ planned · ◐ in p
 - ☑ API contract tests.
 
 ### Milestone 4 — Claude Agent SDK layer
-- ☐ MCP tools exposing `read_urdf`, `stage_edit`, `validate_model`, `apply_model`, `rollback`, `describe_joint`.
-- ☐ Pre/post tool hooks enforcing staged-only mutation + audit logging.
-- ☐ URDF Editor Agent (natural language → `EditOperation`).
-- ☐ Constraint Validator + Kinematic Reasoning agents (explanations).
-- ☐ Repair Agent (fix malformed URDF, suggest safe repairs).
-- ☐ Recorded-response tests so the AI layer runs deterministically in CI.
+- ☑ MCP tools exposing `read_urdf`, `stage_edit`, `validate_model`, `apply_model`, `rollback`, `describe_joint`.
+- ☑ Pre/post tool hooks enforcing staged-only mutation + audit logging.
+- ☑ URDF Editor Agent (natural language → `EditOperation`).
+- ☑ Constraint Validator + Kinematic Reasoning agents (explanations).
+- ☑ Repair Agent (fix malformed URDF, suggest safe repairs).
+- ☑ Recorded-response tests so the AI layer runs deterministically in CI; opt-in live-SDK suite.
 
 ### Milestone 5 — UX & robustness
 - ☐ Optional web front-end (`web/`) for editing and visualization.

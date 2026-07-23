@@ -4,7 +4,7 @@ package_name = "urdf_live_editor"
 
 setup(
     name=package_name,
-    version="0.5.0",
+    version="0.6.0",
     packages=find_packages(exclude=["test"]),
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
@@ -16,7 +16,8 @@ setup(
     maintainer="Project maintainers",
     maintainer_email="titanblack733@gmail.com",
     description="Deterministic core + observability + launch/config integration "
-    "for the ROS 2 Live URDF Editor.",
+    "+ Milestone 6 extensions (ros2_control, Gazebo, multi-model sessions, "
+    "physical validation) for the ROS 2 Live URDF Editor.",
     license="Apache-2.0",
     tests_require=["pytest"],
     entry_points={

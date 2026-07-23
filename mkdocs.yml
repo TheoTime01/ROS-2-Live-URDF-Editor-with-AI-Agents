@@ -35,6 +35,7 @@ nav:
       - Observability: reference/observability.md
       - Launch/Integration sync: reference/launch-integration.md
       - Validation rules: reference/validation-rules.md
+      - Extensions (Milestone 6): reference/extensions.md
   - Tutorials:
       - Getting started: tutorials/getting-started.md
       - Your first live edit: tutorials/first-edit.md

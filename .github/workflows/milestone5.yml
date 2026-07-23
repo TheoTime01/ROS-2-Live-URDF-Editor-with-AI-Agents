@@ -1,0 +1,51 @@
+# CI for the Milestone 5 deliverables (observability, launch/config sync, web
+# UI, docs). These checks are all offline and ROS-independent, so they run fast
+# on a plain runner. The full colcon build + launch_testing suite (Milestones
+# 0-3) is expected to run in a separate ROS workflow.
+name: milestone-5-checks
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  python:
+    name: Python core (observability + launch sync)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install test tools
+        run: pip install pytest flake8 PyYAML
+      - name: Lint
+        run: flake8 --max-line-length=99 --extend-ignore=E203,W503 src conftest.py
+      - name: Test
+        run: pytest src -q
+
+  web:
+    name: Web front-end unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run pure-module tests
+        working-directory: web
+        run: node --test
+
+  docs:
+    name: Documentation site builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install MkDocs
+        run: pip install -r docs/requirements.txt
+      - name: Build (strict)
+        run: mkdocs build --strict

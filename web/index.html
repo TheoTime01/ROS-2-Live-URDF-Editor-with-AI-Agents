@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ROS 2 Live URDF Editor</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">⚙</span>
+        <span class="title">ROS 2 Live URDF Editor</span>
+      </div>
+      <div class="status" id="status-strip">
+        <span class="chip" id="conn-chip" title="Backend connection">connecting…</span>
+        <span class="chip" id="version-chip">version —</span>
+        <span class="chip" id="valid-chip">validation —</span>
+        <span class="chip" id="health-chip">health —</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- Editing column -->
+      <section class="panel panel-edit">
+        <h2>Edit</h2>
+
+        <div class="subpanel">
+          <h3>URDF source</h3>
+          <textarea id="urdf-input" spellcheck="false" aria-label="URDF source"></textarea>
+          <div class="row">
+            <button id="btn-stage-source" class="primary">Stage source</button>
+            <button id="btn-reload">Reload current</button>
+          </div>
+        </div>
+
+        <div class="subpanel">
+          <h3>Quick edit operation</h3>
+          <form id="op-form" class="op-form">
+            <label>Operation
+              <select id="op-type">
+                <option value="add_joint">add_joint</option>
+                <option value="update_joint">update_joint</option>
+                <option value="set_joint_limit">set_joint_limit</option>
+                <option value="set_joint_axis">set_joint_axis</option>
+                <option value="remove_joint">remove_joint</option>
+                <option value="rename">rename</option>
+                <option value="add_link">add_link</option>
+              </select>
+            </label>
+            <label>Name <input id="op-name" placeholder="elbow" /></label>
+            <div class="op-fields" id="op-fields"></div>
+            <button type="submit" class="primary">Stage operation</button>
+          </form>
+        </div>
+
+        <div class="subpanel">
+          <h3>Staged validation</h3>
+          <div id="validation-out" class="validation">Nothing staged.</div>
+          <div class="row">
+            <button id="btn-apply" class="apply" disabled>Apply staged</button>
+            <button id="btn-rollback">Rollback</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Visualization column -->
+      <section class="panel panel-viz">
+        <h2>Visualization</h2>
+        <p class="hint">
+          Kinematic tree schematic (movable joints in color, fixed in grey). A full
+          RViz2 3D view is provided by the ROS stack; this is the browser preview.
+        </p>
+        <div id="viz" class="viz" role="img" aria-label="Robot kinematic tree"></div>
+        <div class="legend">
+          <span class="lg revolute">revolute</span>
+          <span class="lg continuous">continuous</span>
+          <span class="lg prismatic">prismatic</span>
+          <span class="lg fixed">fixed</span>
+        </div>
+      </section>
+
+      <!-- Observability column -->
+      <section class="panel panel-obs">
+        <div class="tabs" id="tabs">
+          <button class="tab active" data-tab="audit">Audit trail</button>
+          <button class="tab" data-tab="versions">Versions</button>
+          <button class="tab" data-tab="diagnostics">Diagnostics</button>
+          <button class="tab" data-tab="logs">Logs</button>
+        </div>
+
+        <div class="tabpane active" data-pane="audit">
+          <div class="filters">
+            <input id="audit-search" placeholder="filter summary/action/actor…" />
+            <select id="audit-action">
+              <option value="">all actions</option>
+              <option value="load">load</option>
+              <option value="apply">apply</option>
+              <option value="rollback">rollback</option>
+              <option value="sync_config">sync_config</option>
+            </select>
+            <button id="audit-verify">Verify integrity</button>
+          </div>
+          <div id="audit-integrity" class="integrity"></div>
+          <ol id="audit-list" class="audit-list"></ol>
+        </div>
+
+        <div class="tabpane" data-pane="versions">
+          <ol id="version-list" class="version-list"></ol>
+        </div>
+
+        <div class="tabpane" data-pane="diagnostics">
+          <div id="diagnostics-list" class="diag-list"></div>
+        </div>
+
+        <div class="tabpane" data-pane="logs">
+          <pre id="log-stream" class="log-stream"></pre>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

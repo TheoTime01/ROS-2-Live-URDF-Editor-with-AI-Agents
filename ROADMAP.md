@@ -89,10 +89,27 @@ This document is the working roadmap for **ROS 2 Live URDF Editor with AI Agents
 
 ## Milestone 5 — UX & robustness
 
-- ☐ Optional web front-end (`web/`) for editing + visualization.
-- ☐ **Launch/Integration Agent** to keep launch/config in sync after changes.
-- ☐ Structured logging, diagnostics, and an audit-trail viewer.
-- ☐ Documentation site under `docs/` (architecture + tutorials).
+**Goal:** make the system usable and robust for real work — a UI, observability,
+config-drift protection, and documentation.
+
+- ☑ Optional web front-end (`web/`) for editing + visualization — no-build ES
+  modules with an offline mock backend, kinematic-tree visualization, and an
+  audit-trail viewer. Pure modules covered by `node --test`; an optional
+  Playwright end-to-end smoke test drives the real page.
+- ☑ **Launch/Integration Agent** to keep launch/config in sync after changes —
+  a deterministic planner (`urdf_live_editor/integration/launch_sync.py`) plus a
+  thin agent wrapper (`urdf_ai_agents/.../launch_integration_agent.py`) that can
+  never invent a change the planner did not authorize.
+- ☑ Structured logging, diagnostics, and an audit-trail viewer —
+  `urdf_live_editor/observability/` (JSONL logging, OK/WARN/ERROR/STALE
+  diagnostics, hash-chained audit trail), surfaced in the web UI.
+- ☑ Documentation site under `docs/` (architecture + tutorials) — MkDocs +
+  Material, builds green with `mkdocs build --strict`.
+
+**Done when:** the web UI drives the full edit → validate → apply → rollback flow
+(offline or against the ROS API), every applied change is logged and auditable,
+config drift is detected and repairable, and the docs site builds — all covered
+by `pytest`, `node --test`, and a build check. **✅ Met.**
 
 ---
 
@@ -116,4 +133,4 @@ The following are the concrete tasks to pick up first, in order:
 
 ---
 
-_Last updated: 2026-07-21._
+_Last updated: 2026-07-23._

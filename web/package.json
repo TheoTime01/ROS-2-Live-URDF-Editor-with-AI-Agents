@@ -1,0 +1,11 @@
+{
+  "name": "urdf-live-editor-web",
+  "version": "0.5.0",
+  "private": true,
+  "type": "module",
+  "description": "Web front-end for the ROS 2 Live URDF Editor (Milestone 5).",
+  "scripts": {
+    "test": "node --test",
+    "serve": "python3 server.py"
+  }
+}

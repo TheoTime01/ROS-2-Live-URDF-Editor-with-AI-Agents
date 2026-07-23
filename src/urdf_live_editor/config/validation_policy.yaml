@@ -1,0 +1,39 @@
+# Validation & runtime policy for the URDF live editor.
+#
+# The `joints` section enumerates the movable joints the runtime knows about and
+# any per-joint overrides. The Launch/Integration Agent
+# (urdf_ai_agents.agents.launch_integration_agent) keeps this list in sync with
+# the active model: adding entries for new movable joints, removing stale ones,
+# and updating `type` when a joint is retyped. See
+# urdf_live_editor.integration.launch_sync.
+
+# Which advisory (AI-assisted) checks are enabled. The deterministic checks are
+# always on and authoritative; these only add explanations/suggestions.
+advisory:
+  kinematic_degeneracy: true
+  unintended_axis_change: true
+
+# Default runtime behavior for bounded vs. unbounded joints.
+runtime:
+  clamp_bounded_joints: true      # revolute/prismatic values clamp into [lower, upper]
+  wrap_continuous_joints: true    # continuous values wrap modulo 2*pi
+  joint_state_rate_hz: 30
+
+# Structured logging / diagnostics (observability layer).
+observability:
+  log_level: INFO                 # DEBUG | INFO | WARNING | ERROR | FATAL
+  audit_path: audit/model_audit.jsonl
+  heartbeat_stale_after_s: 5.0
+
+# AI model used by the agent layer (overridable via ANTHROPIC_MODEL env var).
+ai:
+  model: claude-sonnet-5
+
+# Per-joint entries. Kept in sync with the model by the Launch/Integration Agent.
+joints:
+  shoulder:
+    type: revolute
+  elbow:
+    type: revolute
+  wrist:
+    type: continuous

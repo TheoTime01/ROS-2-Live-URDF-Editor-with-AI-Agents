@@ -1,0 +1,42 @@
+site_name: ROS 2 Live URDF Editor
+site_description: Live editing, validation, and visualization of URDF/Xacro models with AI agents.
+docs_dir: docs
+repo_url: https://github.com/theotime01/ros-2-live-urdf-editor-with-ai-agents
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: blue
+      accent: light blue
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.integrate
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Reference:
+      - Observability: reference/observability.md
+      - Launch/Integration sync: reference/launch-integration.md
+      - Validation rules: reference/validation-rules.md
+  - Tutorials:
+      - Getting started: tutorials/getting-started.md
+      - Your first live edit: tutorials/first-edit.md
+      - The web UI: tutorials/web-ui.md
+      - Keeping launch/config in sync: tutorials/launch-sync.md

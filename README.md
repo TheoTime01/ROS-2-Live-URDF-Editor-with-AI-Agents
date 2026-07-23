@@ -337,10 +337,10 @@ The roadmap is organized into milestones. Status legend: ☐ planned · ◐ in p
 - ☐ Recorded-response tests so the AI layer runs deterministically in CI.
 
 ### Milestone 5 — UX & robustness
-- ☐ Optional web front-end (`web/`) for editing and visualization.
-- ☐ Launch/Integration Agent to keep launch/config in sync after changes.
-- ☐ Diagnostics, structured logging, and audit trail viewer.
-- ☐ Documentation site (`docs/`) with architecture and tutorials.
+- ☑ Optional web front-end (`web/`) for editing and visualization (with offline mock backend + audit-trail viewer).
+- ☑ Launch/Integration Agent to keep launch/config in sync after changes.
+- ☑ Diagnostics, structured logging, and audit trail viewer (`urdf_live_editor/observability/`).
+- ☑ Documentation site (`docs/`) with architecture and tutorials.
 
 ### Milestone 6 — Extensions (stretch)
 - ☐ `ros2_control` integration (controllers over edited joints).

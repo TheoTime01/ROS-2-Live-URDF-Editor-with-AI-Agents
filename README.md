@@ -343,10 +343,12 @@ The roadmap is organized into milestones. Status legend: ☐ planned · ◐ in p
 - ☑ Documentation site (`docs/`) with architecture and tutorials.
 
 ### Milestone 6 — Extensions (stretch)
-- ☐ `ros2_control` integration (controllers over edited joints).
-- ☐ Gazebo simulation of the live-edited model.
-- ☐ Multi-robot / multi-model sessions.
-- ☐ Collision-geometry and inertial validation.
+- ☑ `ros2_control` integration (controllers over edited joints) — `urdf_live_editor/extensions/ros2_control.py`.
+- ☑ Gazebo simulation of the live-edited model — `urdf_live_editor/extensions/gazebo.py`.
+- ☑ Multi-robot / multi-model sessions — `urdf_live_editor/extensions/sessions.py`.
+- ☑ Collision-geometry and inertial validation — `urdf_live_editor/extensions/physical_validation.py`.
+
+See [`docs/reference/extensions.md`](docs/reference/extensions.md) for the API and examples.
 
 ## Troubleshooting
 

@@ -115,10 +115,39 @@ by `pytest`, `node --test`, and a build check. **✅ Met.**
 
 ## Milestone 6 — Extensions (stretch)
 
-- ☐ `ros2_control` integration (controllers over edited joints).
-- ☐ Gazebo simulation of the live-edited model.
-- ☐ Multi-robot / multi-model sessions.
-- ☐ Collision-geometry and inertial validation.
+**Goal:** extend the trusted core beyond a single visualized model — drive edited
+joints with real controllers, simulate the model, run several models at once, and
+validate the physics — all as deterministic, offline-testable modules under
+`urdf_live_editor/extensions/`, following the same "AI can explain but never
+bypass" contract as the earlier milestones.
+
+- ☑ `ros2_control` integration (controllers over edited joints) —
+  `extensions/ros2_control.py` deterministically generates the `<ros2_control>`
+  URDF block and controller-manager YAML from the model's movable joints, and
+  validates a hand-written controllers config against the model (joint-not-in-
+  model, joint-not-movable, uncontrolled, and double-owned findings).
+- ☑ Gazebo simulation of the live-edited model — `extensions/gazebo.py`
+  generates the `gazebo_ros2_control` plugin block and an ordered, deterministic
+  spawn plan (RViz/RSP → `spawn_entity` → controller spawners), and reports
+  simulation readiness (massless links Gazebo would drop, collision-free links
+  objects pass through).
+- ☑ Multi-robot / multi-model sessions — `extensions/sessions.py` provides a
+  `SessionRegistry` enforcing unique namespaces, deterministic URDF namespacing
+  (links, joints, parent/child and `mimic` references), and combined-scene
+  frame-collision detection.
+- ☑ Collision-geometry and inertial validation — `extensions/physical_validation.py`
+  checks mass positivity, positive-definite inertia tensors (dependency-free
+  Sylvester + closed-form symmetric-3×3 eigenvalues), the principal-moment
+  triangle inequality, and non-positive geometry dimensions.
+
+All four share the small `extensions/report.py` primitives (`Severity` / `Issue`
+/ `Report`) and are covered by `pytest`. A simulation-ready sample model lives at
+`models/sample_arm/sample_arm_sim.urdf`.
+
+**Done when:** the model's controllers, simulation artifacts, multi-model
+namespacing, and physical plausibility can all be generated and validated
+deterministically offline, covered by `pytest`, with no ROS, Gazebo, or LLM
+dependency at test time. **✅ Met.**
 
 ---
 

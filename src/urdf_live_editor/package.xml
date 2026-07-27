@@ -2,11 +2,13 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>urdf_live_editor</name>
-  <version>0.5.0</version>
+  <version>0.6.0</version>
   <description>
     Deterministic core for the ROS 2 Live URDF Editor: URDF loading, validation,
-    the staged-edit pipeline, and the Milestone 5 observability (structured
-    logging, diagnostics, audit trail) and launch/config integration modules.
+    the staged-edit pipeline, the Milestone 5 observability (structured logging,
+    diagnostics, audit trail) and launch/config integration modules, and the
+    Milestone 6 extensions (ros2_control generation, Gazebo simulation
+    artifacts, multi-model sessions, and collision/inertial validation).
   </description>
   <maintainer email="titanblack733@gmail.com">Project maintainers</maintainer>
   <license>Apache-2.0</license>
